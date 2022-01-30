@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  StylesProvider,
+} from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Helmet } from 'react-helmet';
+import { Provider } from 'react-redux';
+
+import Colors from './constants/Colors';
+import routes from './routes';
+import { store } from './store';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: Colors.primary,
+      contrastText: Colors.text,
+    },
+    secondary: {
+      main: Colors.secondary,
+      contrastText: Colors.text,
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <Helmet defaultTitle="MamMam Admin Page"></Helmet>
+          <StylesProvider injectFirst>{routes}</StylesProvider>
+        </div>
+      </ThemeProvider>
+    </Provider>
   );
 }
 
