@@ -36,7 +36,7 @@ function* checkLogin() {
   } catch (error) {
     yield put({
       type: AppActions.Types.CHECK_LOGIN.failed,
-      payload: error,
+      error,
     });
   }
 }
@@ -54,7 +54,7 @@ function* logout() {
   } catch (error) {
     yield put({
       type: AppActions.Types.LOGOUT.failed,
-      payload: error,
+      error,
     });
   }
 }
@@ -66,7 +66,7 @@ function* refreshToken() {
     if (token) {
       const response: Data = yield call(refreshTokenService, token);
 
-      yield CookieHandlerInstance.setCookie(CookieFields.AccessToken, response.data.access_token, response.data.access_token_exp_time / 60);
+      yield CookieHandlerInstance.setCookie(CookieFields.AccessToken, response.data.access_token, response.data.refresh_token_exp_time / 60);
       yield CookieHandlerInstance.setCookie(CookieFields.RefreshToken, response.data.refresh_token, response.data.refresh_token_exp_time / 60);
       AxiosClientInstance.setHeader(response.data.access_token);
 
@@ -77,7 +77,7 @@ function* refreshToken() {
   } catch (error) {
     yield put({
       type: AppActions.Types.REFRESH_TOKEN.failed,
-      payload: error,
+      error,
     });
   }
 }

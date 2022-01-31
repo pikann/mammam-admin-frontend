@@ -19,7 +19,7 @@ function* loginSaga({payload}: any) {
     const response: Data = yield call(loginService, payload);
 
     if (response.data.role === 'admin') {
-      yield CookieHandlerInstance.setCookie(CookieFields.AccessToken, response.data.access_token, response.data.access_token_exp_time / 60);
+      yield CookieHandlerInstance.setCookie(CookieFields.AccessToken, response.data.access_token, response.data.refresh_token_exp_time / 60);
       yield CookieHandlerInstance.setCookie(CookieFields.RefreshToken, response.data.refresh_token, response.data.refresh_token_exp_time / 60);
       
       yield AxiosClientInstance.setHeader(response.data.access_token);
@@ -43,7 +43,8 @@ function* loginSaga({payload}: any) {
     });
     yield put({
       type: LoginAction.Types.LOGIN.failed,
-      payload: error,
+      payload,
+      error,
     });
   }
 }

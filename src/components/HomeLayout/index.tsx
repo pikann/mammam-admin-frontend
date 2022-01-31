@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -6,6 +8,7 @@ import { Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, T
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import PersonIcon from '@mui/icons-material/Person';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import ReportIcon from '@mui/icons-material/Report';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -65,7 +68,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const HomeLayout = (props: any) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+
+  const history = useHistory();
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -116,25 +122,31 @@ const HomeLayout = (props: any) => {
         </Toolbar>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button onClick={() => history.push('/')}>
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => history.push('/user')}>
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="User" />
+          </ListItem>
+          <ListItem button onClick={() => history.push('/video')}>
             <ListItemIcon>
               <OndemandVideoIcon />
             </ListItemIcon>
             <ListItemText primary="Video" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => history.push('/restaurant')}>
             <ListItemIcon>
               <RestaurantIcon />
             </ListItemIcon>
             <ListItemText primary="Restaurant" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => history.push('/report')}>
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
