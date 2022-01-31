@@ -1,5 +1,7 @@
 import HomeLayout from '../components/HomeLayout';
 import DashboardScreen from '../screens/Dashboard';
+import UserScreen from '../screens/User';
+import VideoScreen from '../screens/Video';
 import { AuthenticatedRoute } from './components';
 
 const loginRoutes = [
@@ -8,6 +10,26 @@ const loginRoutes = [
     title: 'MamMam Admin Page - Dashboard',
     route: AuthenticatedRoute,
     component: DashboardScreen,
+    layout: HomeLayout,
+    roles: [],
+    permission: [],
+    exact: true,
+  },
+  {
+    path: '/user',
+    title: 'MamMam Admin Page - User',
+    route: AuthenticatedRoute,
+    component: UserScreen,
+    layout: HomeLayout,
+    roles: [],
+    permission: [],
+    exact: true,
+  },
+  {
+    path: '/video',
+    title: 'MamMam Admin Page - Video',
+    route: AuthenticatedRoute,
+    component: VideoScreen,
     layout: HomeLayout,
     roles: [],
     permission: [],

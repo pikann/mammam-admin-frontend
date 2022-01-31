@@ -4,10 +4,12 @@ import { BrowserRouter, Switch } from 'react-router-dom';
 import HelmetComponent from '../components/HelmetComponent';
 import loginRoutes from './loginRoutes';
 import homeRouters from './homeRoutes';
+import notFoundRoutes from './notFoundRoutes';
 
 const routes = [
   ...loginRoutes,
   ...homeRouters,
+  ...notFoundRoutes
 ];
 
 const RenderRouter = ({
