@@ -39,7 +39,7 @@ function* getPostsSaga({payload}: any) {
   }
 }
 
-function* deletePostsSaga({payload}: any) {
+function* deletePostSaga({payload}: any) {
   try {
     yield call(deletePostService, payload);
 
@@ -58,5 +58,5 @@ function* deletePostsSaga({payload}: any) {
 
 export default function* videoWatcher() {
   yield takeLatest(VideoAction.Types.GET_POSTS.begin, getPostsSaga);
-  yield takeLatest(VideoAction.Types.DELETE_POST.begin, deletePostsSaga);
+  yield takeLatest(VideoAction.Types.DELETE_POST.begin, deletePostSaga);
 }
