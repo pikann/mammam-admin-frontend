@@ -1,7 +1,27 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, CardMedia, CircularProgress, Grid, Modal, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import {
+  Button,
+  CardMedia,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Modal,
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField
+} from '@mui/material';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -26,8 +46,10 @@ const VideoScreen = ({
 }: IProp) => {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [openVideoModal, setOpenVideoModal] = useState(false);
   const [showingVideo, setShowingVideo] = useState('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deletingVideo, setDeletingVideo] = useState('');
 
   useEffect(() => {
     const getPostTimeout = setTimeout(() => {
@@ -93,14 +115,14 @@ const VideoScreen = ({
                     scope="row"
                     onClick={() => {
                       setShowingVideo(post.url);
-                      setOpen(true);
+                      setOpenVideoModal(true);
                     }}
                   >
                     {post._id}
                   </TableCell>
                   <TableCell onClick={() => {
                     setShowingVideo(post.url);
-                    setOpen(true);
+                    setOpenVideoModal(true);
                   }}>
                     <Box
                       component="img"
@@ -114,11 +136,14 @@ const VideoScreen = ({
                   </TableCell>
                   <TableCell onClick={() => {
                     setShowingVideo(post.url);
-                    setOpen(true);
+                    setOpenVideoModal(true);
                   }}>{post.description}</TableCell>
                   <TableCell>{post.author.username}</TableCell>
                   <TableCell>
-                    <Button color="secondary" variant="contained" onClick={() => { deletePost(post._id) }}>
+                    <Button color="warning" variant="contained" onClick={() => {
+                      setDeletingVideo(post._id);
+                      setOpenDeleteDialog(true);
+                    }}>
                       Delete
                     </Button>
                   </TableCell>
@@ -142,8 +167,8 @@ const VideoScreen = ({
       </Box>
 
       <Modal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openVideoModal}
+        onClose={() => setOpenVideoModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -161,6 +186,31 @@ const VideoScreen = ({
           />
         </Box>
       </Modal>
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Delete post
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to delete this video?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {
+            deletePost(deletingVideo);
+            setOpenDeleteDialog(false);
+          }}>Yes</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
