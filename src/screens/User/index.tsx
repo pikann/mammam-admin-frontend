@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { CircularProgress, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import { Button, CircularProgress, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -14,6 +14,8 @@ interface IProp {
   users: IUser[];
   totalPage: number;
   getUsers: (payload: any) => void;
+  banUser: (id: string) => void;
+  unbanUser: (id: string) => void;
 }
 
 const UserScreen = ({
@@ -21,6 +23,8 @@ const UserScreen = ({
   users,
   totalPage,
   getUsers,
+  banUser,
+  unbanUser,
 }: IProp) => {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(0);
@@ -100,7 +104,18 @@ const UserScreen = ({
                   </TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.bio}</TableCell>
-                  <TableCell>{''}</TableCell>
+                  <TableCell>
+                    {
+                      user.banning ?
+                        <Button color="primary" variant="contained" onClick={() => {unbanUser(user._id)}}>
+                          Unban
+                        </Button>
+                        :
+                        <Button color="warning" variant="contained" onClick={() => {banUser(user._id)}}>
+                          Ban
+                        </Button>
+                    }
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -131,6 +146,8 @@ const mapStateToProps = createStructuredSelector<any, any>({
 
 const mapDispatchToProps = (dispatch: any) => ({
   getUsers: (payload: any) => dispatch(UserActions.getUsers.request(payload)),
+  banUser: (id: string) => dispatch(UserActions.banUser.request(id)),
+  unbanUser: (id: string) => dispatch(UserActions.unbanUser.request(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserScreen);

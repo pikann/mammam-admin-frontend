@@ -3,4 +3,5 @@ export interface IUser {
   avatar: string;
   username: string;
   bio: string;
+  banning: boolean;
 }
