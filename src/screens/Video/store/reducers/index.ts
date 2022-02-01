@@ -20,6 +20,9 @@ const videoReducer = (state = initialState, {type, payload}: any) =>
           draft.totalPage = payload.totalPage;
         }
         break;
+      case VideoActions.Types.DELETE_POST.succeeded:
+        draft.posts = draft.posts.filter(post => post._id !== payload);
+        break;
       case VideoActions.Types.LOADING.begin:
         draft.isLoading = true;
         break;
