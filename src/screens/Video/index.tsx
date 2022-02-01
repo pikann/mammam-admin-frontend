@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { CircularProgress, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
+import { Button, CardMedia, CircularProgress, Grid, Modal, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -14,16 +14,20 @@ interface IProp {
   posts: IPost[];
   totalPage: number;
   getPosts: (payload: any) => void;
+  deletePost: (id: string) => void;
 }
 
 const VideoScreen = ({
   isLoading,
   posts,
   totalPage,
-  getPosts
+  getPosts,
+  deletePost,
 }: IProp) => {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [showingVideo, setShowingVideo] = useState('');
 
   useEffect(() => {
     const getPostTimeout = setTimeout(() => {
@@ -84,10 +88,20 @@ const VideoScreen = ({
                   key={post._id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    onClick={() => {
+                      setShowingVideo(post.url);
+                      setOpen(true);
+                    }}
+                  >
                     {post._id}
                   </TableCell>
-                  <TableCell>
+                  <TableCell onClick={() => {
+                    setShowingVideo(post.url);
+                    setOpen(true);
+                  }}>
                     <Box
                       component="img"
                       sx={{
@@ -98,9 +112,16 @@ const VideoScreen = ({
                       src={post.thumbnail}
                     />
                   </TableCell>
-                  <TableCell>{post.description}</TableCell>
+                  <TableCell onClick={() => {
+                    setShowingVideo(post.url);
+                    setOpen(true);
+                  }}>{post.description}</TableCell>
                   <TableCell>{post.author.username}</TableCell>
-                  <TableCell>{''}</TableCell>
+                  <TableCell>
+                    <Button color="secondary" variant="contained" onClick={() => { deletePost(post._id) }}>
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -119,6 +140,27 @@ const VideoScreen = ({
           <CircularProgress color='secondary' size={25} />
         </Grid> : ''}
       </Box>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+        }}>
+          <CardMedia
+            component='video'
+            image={showingVideo}
+            autoPlay
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 }
@@ -131,6 +173,7 @@ const mapStateToProps = createStructuredSelector<any, any>({
 
 const mapDispatchToProps = (dispatch: any) => ({
   getPosts: (payload: any) => dispatch(VideoActions.getPosts.request(payload)),
+  deletePost: (id: string) => dispatch(VideoActions.deletePost.request(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VideoScreen);
